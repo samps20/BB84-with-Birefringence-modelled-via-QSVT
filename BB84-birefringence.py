@@ -99,15 +99,15 @@ def qsvt_hamiltonian_evolution(t):
 
 work_wires = [3]
 hbar = 1.054571817e-34
-L, v = 1e3, 2e8  # 10 km of fiber, ~2e8 m/s
+L, v = 4e3, 2e8
 t_phys = L / v
-t_eff = norm * t_phys / hbar  # ≈ 37 rad
-N = 10  # step number, for Taylor expansion to be useful
+t_eff = norm * t_phys / hbar
+N = 40  # step number, for Taylor expansion to be useful
 t_step = t_eff / N
 matrix = 2 * qp.matrix(
     qsvt_hamiltonian_evolution, wire_order=[0, 1] + control_wires + work_wires
 )(
-    t_step
+    -t_step
 )  # rescalated time
 
 # finally, the matrix that represents the evolution operator
