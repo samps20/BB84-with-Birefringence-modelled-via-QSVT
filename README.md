@@ -52,7 +52,7 @@ pip install pennylane
 Run with:
 
 ```bash
-python bb84-birefringence.py
+python BB84-birefringence.py
 ```
 
 ---
@@ -218,7 +218,7 @@ $$
 
 ## 4. Implementation and Execution
 
-The program is organized in the following blocks, all contained in `bb84-birefringence.py`:
+The program is organized in the following blocks, all contained in `BB84-birefringence.py`:
 
 ### 4.1 Circuit layout
 
@@ -246,8 +246,8 @@ The simulation uses a 4-qubit `default.qubit` device with the following wire ass
 
 ### 4.4 Evolution matrix
 
-* The effective time is $t_{\text{eff}} = \|H\|_1\, t_{\text{phys}} / \hbar$, with $t_{\text{phys}} = L/v$, $L = 10^3$ m of fiber and $v = 2\times10^{8}$ m/s.
-* To keep the Taylor approximation accurate, the evolution is split into `N` identical steps of duration `-t_eff / N` (the minus sign comes from the evolution operator $e^{-iHt/\hbar}$, see [3.7](#37-time-rescaling-and-step-splitting)). The number of steps is scaled proportionally to the fiber length (10 steps per km, e.g. `N = 10` for 1 km, `N = 50` for 5 km and `N = 100` for 10 km), so that the duration of each step, and therefore the Taylor truncation error, stays constant for every distance.
+* The effective time is $t_{\text{eff}} = \|H\|_1\, t_{\text{phys}} / \hbar$, with $t_{\text{phys}} = L/v$, $L = 4\times10^3$ m of fiber (the default value in the script) and $v = 2\times10^{8}$ m/s.
+* To keep the Taylor approximation accurate, the evolution is split into `N` identical steps of duration `-t_eff / N` (the minus sign comes from the evolution operator $e^{-iHt/\hbar}$, see [3.7](#37-time-rescaling-and-step-splitting)). The number of steps is scaled proportionally to the fiber length (10 steps per km, e.g. `N = 10` for 1 km, `N = 40` for 4 km (the default in the script) and `N = 100` for 10 km), so that the duration of each step, and therefore the Taylor truncation error, stays constant for every distance.
 * The circuit matrix is computed with `qp.matrix`, multiplied by 2 to remove the overall $1/2$ factor, and the top-left $2\times 2$ block (the part acting on the system qubit) is sliced and rounded to 4 decimals. This block is the single-step evolution matrix.
 
 ### 4.5 BB84 transmission
@@ -279,9 +279,9 @@ Since bits and bases are chosen at random, the key and the QBER change from run 
 | Parameter | Value | Meaning |
 |-----------|-------|---------|
 | `number_of_bits` | 500 | Number of qubits sent through the channel |
-| `L` | $10^3$ m (default) | Fiber length; varied between 1 km and 10 km in the QBER vs. distance study |
+| `L` | $4\times10^3$ m (default) | Fiber length; varied between 1 km and 10 km in the QBER vs. distance study |
 | `v` | $2\times10^{8}$ m/s | Light propagation speed in the fiber |
-| `N` | 10 (default, for 1 km) | Number of evolution steps, scaled as 10 steps per km to keep the Taylor error constant |
+| `N` | 40 (default, for 4 km) | Number of evolution steps, scaled as 10 steps per km to keep the Taylor error constant |
 | `hbar` | $1.054571817\times10^{-34}$ J·s | Reduced Planck constant |
 
 ### 4.9 QBER vs. distance

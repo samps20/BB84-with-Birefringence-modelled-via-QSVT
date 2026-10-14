@@ -111,7 +111,7 @@ matrix = 2 * qp.matrix(
 )  # rescalated time
 
 # finally, the matrix that represents the evolution operator
-# slicing to obtain the just the matrix representing e^(i*H*t/hbar)
+# slicing to obtain the just the matrix representing e^(-i*H*t/hbar)
 matrix_evolution = np.round(matrix[: 2 ** len(work_wires), : 2 ** len(work_wires)], 4)
 
 
