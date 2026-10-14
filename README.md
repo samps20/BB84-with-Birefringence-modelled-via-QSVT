@@ -286,7 +286,7 @@ Since bits and bases are chosen at random, the key and the QBER change from run 
 
 ### 4.9 QBER vs. distance
 
-The script was run for 500 bits and for fiber lengths between 1 km and 10 km, scaling the number of evolution steps as 10 steps per km (see [4.4](#44-evolution-matrix)) so that the Taylor truncation error is the same for every point.
+The script was run for 500 bits and for fiber lengths between 1 km and 5 km, scaling the number of evolution steps as 10 steps per km (see [4.4](#44-evolution-matrix)) so that the Taylor truncation error is the same for every point.
 
 ![QBER vs. fiber distance](qber-vs-distance.png)
 
