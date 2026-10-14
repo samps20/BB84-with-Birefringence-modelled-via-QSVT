@@ -3,3 +3,4 @@ __pycache__/
 
 # Script específico que no quieres subir a GitHub
 graph.py
+notas

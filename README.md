@@ -31,6 +31,8 @@ This module presents a PennyLane implementation of the BB84 quantum key distribu
 ├── BB84-noiseless.py       # BB84 transmission
 ├── BB84-birefringence.py   # Hamiltonian simulation via QSVT, BB84 transmission, sifting and QBER
 ├── qber-vs-distance.png    # QBER vs. fiber distance plot
+├── LICENSE                 # MIT License (code)
+├── LICENSE-DOC             # CC BY 4.0 (written content and derivations)
 └── README.md               # This file
 ```
 
@@ -58,7 +60,7 @@ python bb84-birefringence.py
 ## 3. Problem Formulation and Algorithm Derivation
 
 ### 3.1 The BB84 Protocol
-The BB84 protocol is considered the first example of a Quantum Key Distribution protocol, this meaning it allows to share a private key securily by exploiting different characteristics of quantum mechanics.
+The BB84 protocol is considered the first example of a Quantum Key Distribution protocol, this meaning it allows them to share a private key securely by exploiting different characteristics of quantum mechanics.
 
 To derive the working principles of this protocol it is first necessary to introduce the two ends of it: the sender, *Alice* and the receiver, *Bob*.
 
@@ -66,7 +68,7 @@ To derive the working principles of this protocol it is first necessary to intro
 
 Alice begins by generating a random array of classical bits, with $a\in \{0,1\}^N$, where $a$ represents the bits chain. 
 
-After that she also generates a random array of basis in which she will encode her message $b_A \in \{Z,X\}^N$ where $b_A$ represnts Alice's bases and $Z,X$ represents the Z and X basis respectively.
+After that she also generates a random array of bases in which she will encode her message $b_A \in \{Z,X\}^N$ where $b_A$ represents Alice's bases and $Z,X$ represent the Z and X bases respectively.
 
 For both of the previous arrays $N$ represents the number of bits that Alice uses.
 
@@ -81,7 +83,7 @@ After that she follows quite a simple rule:
 Alice now sends her states to Bob, always keeping the same order in which she prepared them.
 
 #### Bob's analysis
-Once Bob receives Alice's states he needs to perform a measurement, however, he does not know in which base Alice codified each state. Thus, he creates a random array of basis, just like Alice did before, let us call them $b_B \in \{Z,X\}^N$.
+Once Bob receives Alice's states he needs to perform a measurement, however, he does not know in which base Alice codified each state. Thus, he creates a random array of bases, just like Alice did before, let us call them $b_B \in \{Z,X\}^N$.
 
 Once Bob has his array, he measures each qubit (again, keeping always track of the order) with the corresponding basis. However, two things can happen here:
 
@@ -93,7 +95,7 @@ Therefore, what Alice and Bob do now is share their basis arrays using a public 
 
 #### Sifting
 
-Once Alice and Bob sees each other arrays of basis they check which of the positions have the same basis and keep those positions. They will only use the bits in those positions to create the private key, the others will be discarded.
+Once Alice and Bob see each other's arrays of bases they check which of the positions have the same basis and keep those positions. They will only use the bits in those positions to create the private key, the others will be discarded.
 
 Finally, they have obtained the private key.
 
@@ -101,7 +103,7 @@ Finally, they have obtained the private key.
 
 ### 3.2 Birefringence Hamiltonian
 
-Let us now model how the transport of the states (typically photons) affect the final result. More precisely, how the birefringence of the optical fiber trhough which photons travel affects this whole process.
+Let us now model how the transport of the states (typically photons) affects the final result. More precisely, how the birefringence of the optical fiber through which photons travel affects this whole process.
 
 To do so, it is necessary to define a Hamiltonian, in this case
 
@@ -109,32 +111,32 @@ $$
 H_{fiber}=\frac{\hbar}{2}(\Delta \omega \sigma_z+ \Omega \sigma_x),
 $$
 
-where  $\Delta \omega =10^6 $ rad/s, being the difference between the effective angular frequency associated to the birefringence. And $\Omega=5\cdot 10^5$ being the intensity of the second effective component. Please note that both this values are mearly speculative and for learning purposes only.
+where  $\Delta \omega =10^6 $ rad/s, being the difference between the effective angular frequency associated to the birefringence. And $\Omega=5\cdot 10^5$ being the intensity of the second effective component. Please note that both these values are merely speculative and for learning purposes only.
 
 
 
 ### 3.3 Block Encoding
 
-Typically, with such Hamiltonian one would just apply the evolution caused by it directly. However, the aim of this repository is to show how a cutting-edge technique such as QSVT can be used to encode a non-unitary Hamiltonian and apply it to a circuit. Therefore, we should begin by imagining our Hamiltonian as non-unitary. In that case we would like to embed it in an actual **Unitary matrix**, this process is called **Block Encoding**. 
+Typically, with such a Hamiltonian one would just apply the evolution caused by it directly. However, the aim of this repository is to show how a cutting-edge technique such as QSVT can be used to encode a non-unitary Hamiltonian and apply it to a circuit. Therefore, we should begin by imagining our Hamiltonian as non-unitary. In that case we would like to embed it in an actual **Unitary matrix**, this process is called **Block Encoding**. 
 
-Our Hamiltonian is a Linear Combination of Unitaries (LCU), as such, a PrepSelPrep routine works perfectly in order to encode it. This routine needs to sets of wires: the main register (wires on which the evolution is applied, in our case the wire in which Alice codifies her states) and the auxiliary register/wires. The latter are necessary for the PrepSelPrep routine. 
+Our Hamiltonian is a Linear Combination of Unitaries (LCU), as such, a PrepSelPrep routine works perfectly in order to encode it. This routine needs two sets of wires: the main register (wires on which the evolution is applied, in our case the wire in which Alice codifies her states) and the auxiliary register/wires. The latter are necessary for the PrepSelPrep routine. 
 
-In order to find how many auxiliart wires are necessary one needs to check the terms in the LCU of the hamiltonian. In this case, there are two terms. In order to enconde them as the PrepSelPrep routine requires we need $\log_2(2)=1$ auxiliary wires.
+In order to find how many auxiliary wires are necessary one needs to check the terms in the LCU of the hamiltonian. In this case, there are two terms. In order to encode them as the PrepSelPrep routine requires we need $\log_2(2)=1$ auxiliary wire.
 
-After applying the PrepSelPrep routine, we obtain our Hamiltonian (of original dimension $2^1$ since it is only applied to 1 wire) encoded in a bigger matrice (of dimension $2^2$ since we used two wires for its creation). The Hamiltonian is located at the top-left of this new **unitary** matrix.
+After applying the PrepSelPrep routine, we obtain our Hamiltonian (of original dimension $2^1$ since it is only applied to 1 wire) encoded in a bigger matrix (of dimension $2^2$ since we used two wires for its creation). The Hamiltonian is located at the top-left of this new **unitary** matrix.
 
 
 ### 3.4 Quantum Singular Value Transformation
 
-The QSVT applies a polynomial transformation to a matrice. In our case, we wish to apply this transformation so that our Hamiltonian becomes the operator
+The QSVT applies a polynomial transformation to a matrix. In our case, we wish to apply this transformation so that our Hamiltonian becomes the operator
 $$
 e^{iHt}.
 $$
-To do so, it is necessary to first divide the exponential into polynomials. Of course $e^{ixt}=\cos{xt}+i \sin{xt}$ and we can then expand the sine and consine as a Taylor Series, thus obtaining polynomials. The coefficients of said polynomials need then to be turned into angles, however PennyLane offers a function that directly performs this step and will thus not be explained.
+To do so, it is necessary to first divide the exponential into polynomials. Of course $e^{ixt}=\cos{xt}+i \sin{xt}$ and we can then expand the sine and cosine as a Taylor Series, thus obtaining polynomials. The coefficients of said polynomials need then to be turned into angles, however PennyLane offers a function that directly performs this step and will thus not be explained.
 
-To encode this polynomials separately we need to first create the circuit. To do so we need: the unitary matrix that contains our Hamiltonian embedded and a **Projector operator**. There is an specific projector operator for each angle from the previous step and they need to be interleaved with the unitary matrix for each step. However, depending on the type of polynomial (even or odd) the order varies. The demonstration goes beyond the scope of this document, and luckily PennyLane already has a module to this step for us.
+To encode these polynomials separately we need to first create the circuit. To do so we need: the unitary matrix that contains our Hamiltonian embedded and a **Projector operator**. There is a specific projector operator for each angle from the previous step and they need to be interleaved with the unitary matrix for each step. However, depending on the type of polynomial (even or odd) the order varies. The demonstration goes beyond the scope of this document, and luckily PennyLane already has a module to this step for us.
 
-Of course, the projector operators needs to be applied in precisely the same 2 wires as the unitary matrix is working on.
+Of course, the projector operators need to be applied in precisely the same 2 wires as the unitary matrix is working on.
 
 A last and quite important step is to obtain only the **real part** of the encoded polynomial. To do so, we need an extra auxiliary wire in which we will apply Hadamard gates and that will control the QSVT gates.
 
@@ -143,9 +145,9 @@ We now have the real part of the cosine and the sine encoded.
 
 ### 3.5 Complex Exponential from Cosine and Sine
 
-At this point, we want to build the complex exponential $e^{ixt}=\cos{xt}+i \sin{xt}$ inside of our circuit. To do so, we apply a procedure that is almost the same as the algorithm applied to obtain the real part of the polynomial, just including a S gate between the two QSVT (one for the cosine, and one for the sine. This applies the complex phase $i$ to the sine).
+At this point, we want to build the complex exponential $e^{ixt}=\cos{xt}+i \sin{xt}$ inside of our circuit. To do so, we apply a procedure that is almost the same as the algorithm applied to obtain the real part of the polynomial, just including an S gate between the two QSVT (one for the cosine, and one for the sine. This applies the complex phase $i$ to the sine).
 
-Finally, we have a unitary matrix in which we have encoded our evolution operator, more precisely in the top left, in a sub-matrice of dimension $2^{\text{working wires}}$, i.e 2 for our Hamiltonian.
+Finally, we have a unitary matrix in which we have encoded our evolution operator, more precisely in the top left, in a sub-matrix of dimension $2^{\text{working wires}}$, i.e 2 for our Hamiltonian.
 
 
 
@@ -189,9 +191,9 @@ which decreases exponentially with the number of steps and, therefore, with the 
 
 
 ### 3.7 Time Rescaling and Step Splitting
-After the previous **crucial** explaination, it is understandable that we are now applying $e^{i \tilde{H}t}$ where $\tilde{H}$ is the normalized Hamiltonian of our original one (this is compulsory for encoding).
+After the previous **crucial** explanation, it is understandable that we are now applying $e^{i \tilde{H}t}$ where $\tilde{H}$ is the normalized Hamiltonian of our original one (this is compulsory for encoding).
 
- It is also necessary to realize that, having applied a Taylor expanion, $t$ needs to be small ($<1$) for it to work as intended, but, depending on the distance travelled and the speed of the photons this might not be the case. To address this problem, one devides the evolution into small steps, since $e^{i\tilde{H}t}=(e^{i\tilde{H}t/N})^N$ exactly. Also, if the goal is to obtain the evolution for our Hamiltonian (not the normalized one) one should choose our time to be $\frac{t\cdot \text{normalization}}{ N}$ so that it takes out the normalization of the Hamiltonian and still respects the step approach.
+ It is also necessary to realize that, having applied a Taylor expansion, $t$ needs to be small ($<1$) for it to work as intended, but, depending on the distance travelled and the speed of the photons this might not be the case. To address this problem, one divides the evolution into small steps, since $e^{i\tilde{H}t}=(e^{i\tilde{H}t/N})^N$ exactly. Also, if the goal is to obtain the evolution for our Hamiltonian (not the normalized one) one should choose our time to be $\frac{t\cdot \text{normalization}}{ N}$ so that it takes out the normalization of the Hamiltonian and still respects the step approach.
 
 Finally, any evolution operator has to be $e^{-\frac{i}{\hbar}Ht}$ as stated by Schrödinger's equation. Thus, the final time per step is
 $$
@@ -202,13 +204,13 @@ $$
 
 ### 3.8 Sifting and QBER
 
-The noise is now applied when the photons are being transferred from Alice to Bob, and then, the protocol follows exactly the same approach: Bob obtains his basis, measures, they share public keys and they each obtain the private key.
+The noise is now applied when the photons are being transferred from Alice to Bob, and then, the protocol follows exactly the same approach: Bob obtains his bases, measures, they share their bases publicly and they each obtain the private key.
 
 However, the private keys might not be equal: the noise introduced can change the states so that, even measuring over the same base returns different bits.
 The ratio that measures how much this happens is called QBER:
 
 $$
-QBER=\frac{\text{Correct bits after sifting}}{\text{Total bits after sifting}}
+QBER=\frac{\text{Erroneous bits after sifting}}{\text{Total bits after sifting}}
 $$
 
 
@@ -245,7 +247,7 @@ The simulation uses a 4-qubit `default.qubit` device with the following wire ass
 ### 4.4 Evolution matrix
 
 * The effective time is $t_{\text{eff}} = \|H\|_1\, t_{\text{phys}} / \hbar$, with $t_{\text{phys}} = L/v$, $L = 10^3$ m of fiber and $v = 2\times10^{8}$ m/s.
-* To keep the Taylor approximation accurate, the evolution is split into `N` identical steps of duration `t_eff / N`. The number of steps is scaled proportionally to the fiber length (10 steps per km, e.g. `N = 10` for 1 km, `N = 50` for 5 km and `N = 100` for 10 km), so that the duration of each step, and therefore the Taylor truncation error, stays constant for every distance.
+* To keep the Taylor approximation accurate, the evolution is split into `N` identical steps of duration `-t_eff / N` (the minus sign comes from the evolution operator $e^{-iHt/\hbar}$, see [3.7](#37-time-rescaling-and-step-splitting)). The number of steps is scaled proportionally to the fiber length (10 steps per km, e.g. `N = 10` for 1 km, `N = 50` for 5 km and `N = 100` for 10 km), so that the duration of each step, and therefore the Taylor truncation error, stays constant for every distance.
 * The circuit matrix is computed with `qp.matrix`, multiplied by 2 to remove the overall $1/2$ factor, and the top-left $2\times 2$ block (the part acting on the system qubit) is sliced and rounded to 4 decimals. This block is the single-step evolution matrix.
 
 ### 4.5 BB84 transmission

@@ -197,23 +197,3 @@ bob_key = [bob_bits[b] for b in save_position]
 errors = sum(1 for a, b in zip(alice_key, bob_key) if a != b)
 qber = errors / len(alice_key) if len(alice_key) > 0 else 0
 print("Estimated QBER:\t", qber)
-
-"""
-El hamiltoniano y el qubit que evoluciona van a tener que ser el 3
-el hamiltoniano es dimension 2x2 (pq solo actua sobre un qubit asi que dim 2^1)
-los control wires que necesita es para solo 2 componentes (el de sigma_z y sigma_x) asi que log_2(2) redondeado hacia arriba es 1
-Despues del block encoding tu hamiltoniano que actua en el 3 se mete dentro del block encoding que usa los wires [2,3] 
-(para crearlo has usado el auxiliar y despues sobre el que actua).
-Ahora creo los operadores de proyeccion que se encargaran de codificar el seno y el coseno y completar
-la transformacion polinomica (de tus aputnes, el block encoding de H es U(A) y estos proyectores son Pi_phi, uno para cada angulo).
-Ahora si que aplico el QSVT (usando la formula que tienes en los apuntes de intercalar Pi_phi con U(A)) para obtener
-la parte real del coseno y del seno y ya tenerlos preparados.
-Ahora, como pone en tus aputnes, para aplicar ese 1/2 e^(i*H_noramlied*t) es lo mismo que para sacar la parte real, pero usando lo del seno y el coseno.
-Finalmente queremos sacar la matriz que representa ese e^(i*H_normalized*t) para ello primero sacamos
-la matriz TOTAL (el block encoding y todo) y la multiplicamos por 2 para quitarnos ese 1/2 pesado de 1/2 e^(i*H_noramlied*t)
-y de hecho, fijate arriba si reescalamos el tiempo por norm/hbar pasa esto en el exponente(i*(H/norm)norm*t/hbar)=i*H*t/bar sin normalizar
-Por ultimo, de la matriz que te queda haces slicing, osea, te quedas solo un cacho, el que va de filas desde 0 hasta 2**len(work_wires)
-y de columna 0 a 2**len(work wires), osea, el que contiene el exponente del hamiltoniano e^(i*H*t/hbar) (y bueno, lo redondea a 4 decimales)
-sinceramente, voy a aplicar la evolucion un cojon de veces y ya. Es que sino t=37 y taylor explota, con t_steps=0.37 y aplicando 100 veces
-la evolucoin es lo mismo (de forma exacta exp(t)=exp(t/N)^N asi que no hay problema)
-"""
