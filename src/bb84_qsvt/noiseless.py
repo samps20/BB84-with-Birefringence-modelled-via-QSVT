@@ -1,8 +1,6 @@
 import pennylane as qp
 from pennylane import numpy as np
 
-number_of_bits = 6
-
 dev = qp.device("default.qubit", wires=1)
 
 
@@ -44,35 +42,49 @@ def transmission():
     return (base, alice_bit, bob_meas_base, result[0][0])
 
 
-alice_bits = []
-alice_base = []
-bob_bits = []
-bob_base = []
+def simulate_transmission(number_of_bits):
+    alice_bits = []
+    alice_base = []
+    bob_bits = []
+    bob_base = []
 
-for i in range(number_of_bits):
-    a_base, a_bit, b_base, b_bit = transmission()
-    alice_bits.append(a_bit)
-    alice_base.append(a_base)
-    bob_bits.append(int(b_bit))
-    bob_base.append(b_base)
+    for i in range(number_of_bits):
+        a_base, a_bit, b_base, b_bit = transmission()
+        alice_bits.append(a_bit)
+        alice_base.append(a_base)
+        bob_bits.append(int(b_bit))
+        bob_base.append(b_base)
 
-print("Alice random bits:\t", alice_bits)
-print("Alice random bases:\t", alice_base)
-print("Bob random bits:\t", bob_bits)
-print("Bob random bases:\t", bob_base)
+    return alice_bits, alice_base, bob_bits, bob_base
 
-"""
-Sifting
-"""
-save_position = []
-for t in range(number_of_bits):
-    if alice_base[t] == bob_base[t]:
-        save_position.append(t)
 
-print("The common bases are in position:\t", save_position)
+def sift(alice_bits, alice_base, bob_bits, bob_base):
+    """
+    Sifting
+    """
+    save_position = []
+    for t in range(len(alice_base)):
+        if alice_base[t] == bob_base[t]:
+            save_position.append(t)
 
-key = []
-for position in save_position:
-    key.append(alice_bits[position])
+    key = []
+    for position in save_position:
+        key.append(alice_bits[position])
 
-print("The secret key is:\t", key)
+    return save_position, key
+
+
+if __name__ == "__main__":
+    number_of_bits = 6
+
+    alice_bits, alice_base, bob_bits, bob_base = simulate_transmission(number_of_bits)
+
+    print("Alice random bits:\t", alice_bits)
+    print("Alice random bases:\t", alice_base)
+    print("Bob random bits:\t", bob_bits)
+    print("Bob random bases:\t", bob_base)
+
+    save_position, key = sift(alice_bits, alice_base, bob_bits, bob_base)
+
+    print("The common bases are in position:\t", save_position)
+    print("The secret key is:\t", key)
