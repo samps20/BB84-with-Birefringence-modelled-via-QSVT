@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 license = { file = "LICENSE" }
 dependencies = [
-    "numpy", "pennylane"
+    "numpy", "pennylane>=0.45.1"
 ]
 
 [project.optional-dependencies]
