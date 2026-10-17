@@ -1,11 +1,35 @@
 import numpy as np
-
+from scipy.linalg import expm
 from bb84_qsvt.birefringence import (
     compute_evolution_matrix,
     compute_qber,
     sift,
     simulate_transmission,
 )
+
+HBAR = 1.054571817e-34
+X = np.array([[0, 1], [1, 0]], dtype=complex)
+Z = np.array([[1, 0], [0, -1]], dtype=complex)
+L_TEST = 4e3
+N_TEST = 40
+
+
+def exact_step(L=L_TEST, N=N_TEST, v=2e8):
+    dw, Om = 1e6, 5e5
+    t_step = (L / v) / N
+    return expm(-0.5j * (dw * Z + Om * X) * t_step)
+
+
+def test_block_matches_exact_exponential():
+    matrix, _ = compute_evolution_matrix(L=L_TEST, N=N_TEST)
+    assert np.allclose(np.array(matrix), exact_step(L_TEST, N_TEST), atol=1e-3)
+
+
+def test_n_steps_match_total_evolution():
+    matrix, _ = compute_evolution_matrix(L=L_TEST, N=N_TEST)
+    total = np.linalg.matrix_power(np.array(matrix), N_TEST)
+    exact_total = exact_step(L_TEST, 1)  # N=1: all the evolution at once, no steps
+    assert np.allclose(total, exact_total, atol=1e-2)
 
 
 def test_qber_with_hand_made_data():
