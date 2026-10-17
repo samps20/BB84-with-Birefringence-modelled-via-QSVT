@@ -1,4 +1,5 @@
 # BB84 Quantum Key Distribution under Birefringence Noise — QSVT Hamiltonian Simulation
+![CI](https://github.com/samps20/BB84-with-Birefringence-modelled-via-QSVT/actions/workflows/ci.yml/badge.svg)
 
 ## Abstract
 
@@ -20,7 +21,8 @@ This module presents a PennyLane implementation of the BB84 quantum key distribu
    - [3.7 Time Rescaling and Step Splitting](#37-time-rescaling-and-step-splitting)
    - [3.8 Sifting and QBER](#38-sifting-and-qber)
 4. [Implementation and Execution](#4-implementation-and-execution)
-5. [References](#5-references)
+5. [Testing](#5-testing)
+6. [References](#6-references)
 
 ---
 
@@ -55,6 +57,12 @@ Install the package (this also installs the dependencies):
 
 ```bash
 pip install -e .
+```
+
+To also install the development dependencies needed to run the tests (see [Testing](#5-testing)):
+
+```bash
+pip install -e ".[dev]"
 ```
 
 Run with:
@@ -287,7 +295,7 @@ Since bits and bases are chosen at random, the key and the QBER change from run 
 | Parameter | Value | Meaning |
 |-----------|-------|---------|
 | `number_of_bits` | 500 | Number of qubits sent through the channel |
-| `L` | $4\times10^3$ m (default) | Fiber length; varied between 1 km and 10 km in the QBER vs. distance study |
+| `L` | $4\times10^3$ m (default) | Fiber length; varied between 1 km and 5 km in the QBER vs. distance study |
 | `v` | $2\times10^{8}$ m/s | Light propagation speed in the fiber |
 | `N` | 40 (default, for 4 km) | Number of evolution steps, scaled as 10 steps per km to keep the Taylor error constant |
 | `hbar` | $1.054571817\times10^{-34}$ J·s | Reduced Planck constant |
@@ -302,7 +310,27 @@ The script was run for 500 bits and for fiber lengths between 1 km and 5 km, sca
 
 ---
 
-## 5. References
+## 5. Testing
+
+Install the development dependencies and run the test suite:
+
+```bash
+pip install -e ".[dev]"
+pytest -v
+```
+
+The suite (10 tests: 7 for the birefringence module and 3 for the noiseless one) covers:
+
+* **Sifting and QBER logic** against hand-made data, including the empty-key edge case.
+* **Unitarity** of the QSVT evolution matrix.
+* **Correctness:** the $2\times 2$ block extracted from the QSVT circuit is compared with the exact matrix exponential (`scipy.linalg.expm`), built independently from $\Delta\omega$ and $\Omega$ (not from the coefficients used in the code). This is checked both for a single step and for $N$ steps against the total evolution.
+* **End-to-end consistency:** an identity channel gives QBER = 0, and the noiseless protocol gives identical keys and about 50 % sifting.
+
+The tests run automatically on every push and pull request through GitHub Actions (`.github/workflows/ci.yml`).
+
+---
+
+## 6. References
 
 ### Primary Papers & Textbooks
 1. **Bennett, C. H., & Brassard, G. (1984).** Quantum cryptography: Public key distribution and coin tossing. *Proceedings of IEEE International Conference on Computers, Systems and Signal Processing*, Bangalore, India, pp. 175–179.
