@@ -28,12 +28,20 @@ This module presents a PennyLane implementation of the BB84 quantum key distribu
 
 ```
 .
-├── BB84-noiseless.py       # BB84 transmission
-├── BB84-birefringence.py   # Hamiltonian simulation via QSVT, BB84 transmission, sifting and QBER
-├── qber-vs-distance.png    # QBER vs. fiber distance plot
-├── LICENSE                 # MIT License (code)
-├── LICENSE-DOC             # CC BY 4.0 (written content and derivations)
-└── README.md               # This file
+├── src/
+│   └── bb84_qsvt/
+│       ├── __init__.py
+│       ├── noiseless.py        # BB84 transmission
+│       └── birefringence.py    # Hamiltonian simulation via QSVT, BB84 transmission, sifting and QBER
+├── tests/
+│   ├── test_noiseless.py
+│   └── test_birefringence.py
+├── .github/workflows/ci.yml    # CI: runs the tests on every push
+├── pyproject.toml              # Package metadata and dependencies
+├── qber-vs-distance.png        # QBER vs. fiber distance plot
+├── LICENSE                     # MIT License (code)
+├── LICENSE-DOC                 # CC BY 4.0 (written content and derivations)
+└── README.md                   # This file
 ```
 
 ---
@@ -43,16 +51,16 @@ This module presents a PennyLane implementation of the BB84 quantum key distribu
 * Python 3.10+
 * [PennyLane](https://pennylane.ai/) — a recent version providing `poly_to_angles`, `PrepSelPrep`, `PCPhase`, `QSVT` and the `default.qubit` device. It also supplies the autograd-wrapped NumPy (`pennylane.numpy`) used for array handling.
 
-Install with:
+Install the package (this also installs the dependencies):
 
 ```bash
-pip install pennylane
+pip install -e .
 ```
 
 Run with:
 
 ```bash
-python BB84-birefringence.py
+python src/bb84_qsvt/birefringence.py
 ```
 
 ---
@@ -218,7 +226,7 @@ $$
 
 ## 4. Implementation and Execution
 
-The program is organized in the following blocks, all contained in `BB84-birefringence.py`:
+The program is organized in the following blocks, all contained in `src/bb84_qsvt/birefringence.py`:
 
 ### 4.1 Circuit layout
 
